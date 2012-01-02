@@ -4,11 +4,14 @@ namespace DetectEncoding
 {
     internal class Utf8Detector : IDetector
     {
+        private const int InitialByteProbability = (int) (0.7*Detector.MaxCertainty);
+        private const int ContinuationByteProbability = (int) (0.25*Detector.MaxCertainty);
+
         private Utf8State _state = Utf8State.Start;
-        private int _uncertainty = 65536;
+        private int _uncertainty = Detector.MaxCertainty;
         private int _multibytesRemaining;
 
-        public State Consume(byte b)
+        public void Consume(byte b)
         {
             // TODO BOM
             switch(_state)
@@ -36,7 +39,7 @@ namespace DetectEncoding
 
                     if (_state != Utf8State.Error)
                     {
-                        _uncertainty = (_uncertainty*45824) >> 16;
+                        _uncertainty = (_uncertainty*InitialByteProbability) >> Detector.MaxCertaintyBits;
                     }
 
                     break;
@@ -47,7 +50,7 @@ namespace DetectEncoding
                         {
                             _state = Utf8State.Start;
                         }
-                        _uncertainty = (_uncertainty*16384) >> 16;
+                        _uncertainty = (_uncertainty*ContinuationByteProbability) >> Detector.MaxCertaintyBits;
                     }
                     else
                     {
@@ -59,12 +62,27 @@ namespace DetectEncoding
                 default:
                     throw new InvalidOperationException("Unknown UTF-8 state");
             }
+        }
 
-            var validity = _state == Utf8State.Error
-                               ? Validity.Invalid
-                               : Validity.Valid;
+        public Validity Validity
+        {
+            get
+            {
+                return _state == Utf8State.Error
+                           ? Validity.Invalid
+                           : Validity.Valid;
+            }
+        }
 
-            return new State {Certainty = 65536 - _uncertainty, Validity = validity};
+        public int Certainty
+        {
+            get
+            {
+                int maxCertainty = Detector.MaxCertainty;
+                return _state == Utf8State.Error
+                           ? maxCertainty
+                           : maxCertainty - _uncertainty;
+            }
         }
 
         private enum Utf8State

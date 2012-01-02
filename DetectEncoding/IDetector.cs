@@ -2,6 +2,8 @@
 {
     internal interface IDetector
     {
-        State Consume(byte b);
+        void Consume(byte b);
+        Validity Validity { get; }
+        int Certainty { get; }
     }
 }

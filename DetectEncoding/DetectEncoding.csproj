@@ -31,7 +31,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="State.cs" />
+    <Compile Include="Detector.cs" />
     <Compile Include="EncodingDetector.cs" />
     <Compile Include="IDetector.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
