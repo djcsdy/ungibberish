@@ -64,15 +64,7 @@ namespace DetectEncoding
             }
         }
 
-        public Validity Validity
-        {
-            get
-            {
-                return _state == Utf8State.Error
-                           ? Validity.Invalid
-                           : Validity.Valid;
-            }
-        }
+        public bool IsValid { get { return _state != Utf8State.Error; } }
 
         public int Certainty { get { return Detector.MaxCertainty - _uncertainty; } }
 

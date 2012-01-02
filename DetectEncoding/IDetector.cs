@@ -3,7 +3,7 @@
     internal interface IDetector
     {
         void Consume(byte b);
-        Validity Validity { get; }
+        bool IsValid { get; }
         int Certainty { get; }
     }
 }
