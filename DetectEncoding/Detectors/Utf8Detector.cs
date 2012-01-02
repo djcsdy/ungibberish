@@ -58,7 +58,7 @@ namespace DetectEncoding.Detectors
                     }
                     break;
                 case Utf8State.Error:
-                    throw new InvalidOperationException("Utf8Detector.Consume called when in error");
+                    throw new InvalidOperationException("Utf8Detector.Consume called while invalid");
                 default:
                     throw new InvalidOperationException("Unknown UTF-8 state");
             }
