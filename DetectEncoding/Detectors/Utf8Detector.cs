@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DetectEncoding
+namespace DetectEncoding.Detectors
 {
     internal class Utf8Detector : IDetector
     {

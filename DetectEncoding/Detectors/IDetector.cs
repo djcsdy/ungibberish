@@ -1,4 +1,4 @@
-﻿namespace DetectEncoding
+﻿namespace DetectEncoding.Detectors
 {
     internal interface IDetector
     {

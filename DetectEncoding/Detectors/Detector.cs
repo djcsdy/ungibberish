@@ -1,4 +1,4 @@
-﻿namespace DetectEncoding
+﻿namespace DetectEncoding.Detectors
 {
     internal static class Detector
     {
