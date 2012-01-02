@@ -5,8 +5,8 @@ namespace DetectEncoding
     internal class Utf8Detector : IDetector
     {
         private Utf8State _state = Utf8State.Start;
-        private int _consumedCharacters = 0;
-        private int _multibytes = 0;
+        private int _uncertainty = 65536;
+        private int _multibytesRemaining;
 
         public State Consume(byte b)
         {
@@ -14,48 +14,40 @@ namespace DetectEncoding
             switch(_state)
             {
                 case Utf8State.Start:
-                    if (b <= 0x7f) // TODO non-printing characters
-                    {
-                        _consumedCharacters++;
-                    }
-                    else if (b >= 0xc2 && b <= 0xdf)
+                    if (b >= 0xc2 && b <= 0xdf)
                     {
                         _state = Utf8State.Multibyte;
-                        _multibytes = 1;
+                        _multibytesRemaining = 1;
                     }
                     else if (b >= 0xe0 && b <= 0xef)
                     {
                         _state = Utf8State.Multibyte;
-                        _multibytes = 2;
+                        _multibytesRemaining = 2;
                     }
-                    else if (b >= 0xf0 && b <= 0xf7)
+                    else if (b >= 0xf0 && b <= 0xf4)
                     {
                         _state = Utf8State.Multibyte;
-                        _multibytes = 3;
+                        _multibytesRemaining = 3;
                     }
-                    else if (b >= 0xf8 && b <= 0xfb)
-                    {
-                        _state = Utf8State.Multibyte;
-                        _multibytes = 4;
-                    }
-                    else if (b >= 0xfc && b <= 0xfd)
-                    {
-                        _state = Utf8State.Multibyte;
-                        _multibytes = 5;
-                    }
-                    else
+                    else if (b >= 0x80)
                     {
                         _state = Utf8State.Error;
                     }
+
+                    if (_state != Utf8State.Error)
+                    {
+                        _uncertainty = (_uncertainty*45824) >> 16;
+                    }
+
                     break;
                 case Utf8State.Multibyte:
                     if (b >= 0x80 && b <= 0xbf)
                     {
-                        if (--_multibytes == 0)
+                        if (--_multibytesRemaining == 0)
                         {
                             _state = Utf8State.Start;
-                            _consumedCharacters++;
                         }
+                        _uncertainty = (_uncertainty*16384) >> 16;
                     }
                     else
                     {
@@ -68,13 +60,11 @@ namespace DetectEncoding
                     throw new InvalidOperationException("Unknown UTF-8 state");
             }
 
-            var certainty = 0; // TODO
-
             var validity = _state == Utf8State.Error
                                ? Validity.Invalid
                                : Validity.Valid;
 
-            return new State {Certainty = certainty, Validity = validity};
+            return new State {Certainty = 65536 - _uncertainty, Validity = validity};
         }
 
         private enum Utf8State
