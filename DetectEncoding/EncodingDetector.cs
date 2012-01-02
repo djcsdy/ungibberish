@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace DetectEncoding
@@ -7,14 +8,20 @@ namespace DetectEncoding
     {
         private const string Bom = "\ufeff";
 
+        private static readonly Encoding Utf32Le = new UTF32Encoding(false, false, true);
+        private static readonly Encoding Utf32Be = new UTF32Encoding(true, false, true);
+        private static readonly Encoding Utf16Le = new UnicodeEncoding(false, false, true);
+        private static readonly Encoding Utf16Be = new UnicodeEncoding(true, false, true);
+        private static readonly Encoding Utf8 = new UTF8Encoding(false, true);
+
         private static readonly IEnumerable<KeyValuePair<byte[], Encoding>> ByteOrderMarks =
             new[]
                 {
-                    GetByteOrderMark(Encoding.UTF32), // UTF32-LE
-                    GetByteOrderMark(Encoding.GetEncoding(12001)), // UTF32-BE
-                    GetByteOrderMark(Encoding.Unicode), // UTF16-LE
-                    GetByteOrderMark(Encoding.BigEndianUnicode), // UTF16-BE
-                    GetByteOrderMark(Encoding.UTF8)
+                    GetByteOrderMark(Utf32Le),
+                    GetByteOrderMark(Utf32Be),
+                    GetByteOrderMark(Utf16Le),
+                    GetByteOrderMark(Utf16Be),
+                    GetByteOrderMark(Utf8)
                 };
 
         private static KeyValuePair<byte[], Encoding> GetByteOrderMark(Encoding encoding)
@@ -45,7 +52,28 @@ namespace DetectEncoding
                 break;
             }
 
+            IEnumerable<Encoding> encodings = tentativeEncoding == null
+                                                  ? new Encoding[0]
+                                                  : new[] {tentativeEncoding};
+            encodings = encodings.Concat(ByteOrderMarks
+                                             .Select(byteOrderMark => byteOrderMark.Value)
+                                             .Where(encoding => encoding != tentativeEncoding));
 
+            foreach (var encoding in encodings)
+            {
+                try
+                {
+                    encoding.GetString(text);
+                }
+                catch (DecoderFallbackException)
+                {
+                    continue;
+                }
+
+                return encoding;
+            }
+
+            return null;
         }
     }
 }
