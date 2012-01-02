@@ -2,26 +2,35 @@
 
 namespace DetectEncoding.Detectors
 {
-    internal class Utf16LeDetector : IDetector
+    internal class Utf16Detector : IDetector
     {
         private const int InitialWordProbability = (int) ((long) 64512*Detector.MaxCertainty/65536);
         private const int SurrogateWordProbability = 1024*Detector.MaxCertainty/65536;
 
+        private readonly bool _bigEndian;
         private bool _isEven;
-        private byte _littleEnd;
+        private byte _end;
         private bool _isSurrogate;
         private int _uncertainty = Detector.MaxCertainty;
+
+        public Utf16Detector(bool bigEndian)
+        {
+            _bigEndian = bigEndian;
+        }
 
         public void Consume(byte b)
         {
             if (!IsValid)
             {
-                throw new InvalidOperationException("Utf16LeDetector.Consume called while invalid");
+                throw new InvalidOperationException("Utf16Detector.Consume called while invalid");
             }
 
             if (_isEven)
             {
-                var value = (b << 8) | _littleEnd;
+                var value = _bigEndian
+                                ? (_end << 8) | b
+                                : (b << 8) | _end;
+
                 if (_isSurrogate)
                 {
                     if (value < 0xdc00 | value > 0xdfff)
@@ -52,7 +61,7 @@ namespace DetectEncoding.Detectors
             }
             else
             {
-                _littleEnd = b;
+                _end = b;
             }
 
             _isEven = !_isEven;

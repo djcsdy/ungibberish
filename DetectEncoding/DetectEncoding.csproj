@@ -32,7 +32,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Detectors\Detector.cs" />
-    <Compile Include="Detectors\Utf16LeDetector.cs" />
+    <Compile Include="Detectors\Utf16Detector.cs" />
     <Compile Include="EncodingDetector.cs" />
     <Compile Include="Detectors\IDetector.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
