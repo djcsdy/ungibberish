@@ -74,16 +74,7 @@ namespace DetectEncoding
             }
         }
 
-        public int Certainty
-        {
-            get
-            {
-                int maxCertainty = Detector.MaxCertainty;
-                return _state == Utf8State.Error
-                           ? maxCertainty
-                           : maxCertainty - _uncertainty;
-            }
-        }
+        public int Certainty { get { return Detector.MaxCertainty - _uncertainty; } }
 
         private enum Utf8State
         {
