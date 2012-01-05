@@ -1,4 +1,4 @@
-﻿namespace DetectEncoding.Detectors
+﻿namespace Ungibberish.Detectors
 {
     internal interface IDetector
     {

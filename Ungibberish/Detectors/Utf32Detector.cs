@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DetectEncoding.Detectors
+namespace Ungibberish.Detectors
 {
     internal class Utf32Detector : IDetector
     {

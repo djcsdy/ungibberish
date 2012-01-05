@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Text;
 
-namespace DetectEncoding
+namespace Ungibberish
 {
     public class EncodingDetector
     {

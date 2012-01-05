@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace DetectEncoding.Detectors
+namespace Ungibberish.Detectors
 {
     internal class EightBitDetector : IDetector
     {

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DetectEncoding", "DetectEncoding\DetectEncoding.csproj", "{E976438B-34A2-49A5-ACB3-F3E8EE8C262D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ungibberish", "Ungibberish\Ungibberish.csproj", "{E976438B-34A2-49A5-ACB3-F3E8EE8C262D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

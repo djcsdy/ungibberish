@@ -8,8 +8,8 @@
     <ProjectGuid>{E976438B-34A2-49A5-ACB3-F3E8EE8C262D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DetectEncoding</RootNamespace>
-    <AssemblyName>DetectEncoding</AssemblyName>
+    <RootNamespace>Ungibberish</RootNamespace>
+    <AssemblyName>Ungibberish</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
