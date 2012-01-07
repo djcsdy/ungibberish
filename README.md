@@ -1,4 +1,10 @@
-Ungibberish is a fast character encoding detection library for .NET.
+Ungibberish
+-----------
+
+Heuristic character-encoding detection for .NET.
+
+This library is a work-in-progress. It doesn’t do anything particularly
+useful yet.
 
 
 Copyright
